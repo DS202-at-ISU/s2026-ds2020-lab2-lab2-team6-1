@@ -49,9 +49,6 @@ The variable of primary interest is **`Sale Price`**, the USD sale price of each
 
 ## Step 3: Exploring Main Variable
 ```{r}
-ames$`Sale Price`
-```
-```{r}
 summary(ames$`Sale Price`)
 ```
 ```{r}
