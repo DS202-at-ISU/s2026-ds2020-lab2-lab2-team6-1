@@ -121,7 +121,14 @@ summary(ames)
     ##                     (19) Res: North Ridge Hei: 420  
     ##                     (Other)                  :3622
 
-## Step 2: Main Variable
+## Step 2: Main Variable – Sale Price
+
+The variable of primary interest is **`Sale Price`**, the USD sale price
+of each residential property. It would be expected that if the sale
+price of a house increases or decreases, most other numerical variables
+in the dataset would change. For example, if one house’s sale price is
+higher than another’s, you might expect it to have a higher total living
+area in square feet.
 
 ## Step 3: Exploring Main Variable
 
