@@ -173,7 +173,87 @@ right skewed, and the presence of outliers is pretty obvious.
 
 – Ryan: YearBuilt
 
-– Nick: TotalLivingArea (sf)
+– Nick: TotalLivingArea (sf) My goal is to compare the total living area
+to the sale price. I will first show what the correlation is before any
+changes, then i will filter the data a bit to get a better insight to
+how living area and sale price correlate.
+
+``` r
+cor(ames$`Sale Price`, ames$YearBuilt, use = "complete.obs")
+```
+
+    ## [1] 0.1533749
+
+``` r
+summary(ames$`TotalLivingArea (sf)`)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##       0    1095    1460    1507    1792    6007     447
+
+``` r
+range(ames$`TotalLivingArea (sf)`, na.rm = TRUE)
+```
+
+    ## [1]    0 6007
+
+``` r
+ggplot(ames, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
+  geom_point(alpha = 0.5, color = "red") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Sale Price vs Total Living Area",
+       x = "Total Living Area (sq ft)",
+       y = "Sale Price")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- --> Time to
+filter the data:
+
+``` r
+ames_clean <- ames %>%
+  filter(`Sale Price` > 0 ,`Sale Price` < 1000000,
+         `TotalLivingArea (sf)` > 0)
+```
+
+``` r
+nrow(ames)
+```
+
+    ## [1] 6935
+
+``` r
+nrow(ames_clean)
+```
+
+    ## [1] 3919
+
+So quite a few rows were filtered out Now this is the sale price
+histogram post-filtering
+
+``` r
+ggplot(ames_clean, aes(x = `Sale Price`)) +
+  geom_histogram(bins = 30, fill = "blue", color = 'white') +
+  theme_minimal()
+```
+
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> And this is
+the scatterplot post filtering
+
+``` r
+ggplot(ames_clean, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+``` r
+cor(ames_clean$`Sale Price`, ames_clean$`TotalLivingArea (sf)`, use = "complete.obs")
+```
+
+    ## [1] 0.4557264
+
+The correlation tripled
 
 – Amelia: Lot (sf)
 
