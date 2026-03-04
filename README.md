@@ -316,3 +316,54 @@ cor(ames$Bedrooms, ames$`Sale Price`, use = "complete.obs")
     ## [1] -0.0631706
 
 – Huu: Acres
+
+``` r
+  #Range
+  range(ames$Acres, na.rm = TRUE)
+```
+
+    ## [1]  0.000 12.012
+
+``` r
+  sum(is.na(ames$Acres))
+```
+
+    ## [1] 89
+
+``` r
+  #The range of the Acres variable is between 0 and 12.012 and there is 89 missing values
+```
+
+``` r
+  # Distribution plot
+    ggplot(ames, aes(x = Acres)) +
+      geom_histogram(bins = 30) +
+      labs(title = "Distribution of Acres", x = "Acres", y = "Count")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+``` r
+    # The distribution of the Acres was strongly right-skewed, most homes have very small lot sizes, and there is a long right tail with the small number of very large lots.
+```
+
+``` r
+  ggplot(ames, aes(x = Acres, y = `Sale Price`)) +
+  geom_point(alpha = 0.3) +
+  scale_y_continuous(trans = "log1p") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Sale Price vs Acres",
+    x = "Acres",
+    y = "Sale Price (log1p)"
+  )
+```
+
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+``` r
+  #The relationship between Acres and Sale Price is not clean.
+  # Most observations cluster at very small acreage (near 0), and within this cluster there is no strong linear pattern. 
+  # A large number of records have Sale Price = 0, forming a horizontal band at 0; these values heavily influence the fitted line and make the overall linear trend appear negative.
+  # There are also a few large-acre and very high-price outliers that add noise and make a simple linear relationship unreliable.
+```
