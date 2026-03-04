@@ -72,7 +72,7 @@ The main thing that is odd is the sale prices that have 0, as well as some prett
 
 -- Ryan: YearBuilt
 
--- Nick: TotalLivingArea (sf)
+-- Dominic: TotalLivingArea (sf)
 My goal is to compare the total living area to the sale price. I will first show what the correlation is before any changes, then i will filter the data a bit to get a better insight to how living area and sale price correlate.
 
 ```{r}

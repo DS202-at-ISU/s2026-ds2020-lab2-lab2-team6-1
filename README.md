@@ -173,10 +173,10 @@ right skewed, and the presence of outliers is pretty obvious.
 
 – Ryan: YearBuilt
 
-– Nick: TotalLivingArea (sf) My goal is to compare the total living area
-to the sale price. I will first show what the correlation is before any
-changes, then i will filter the data a bit to get a better insight to
-how living area and sale price correlate.
+– Dominic: TotalLivingArea (sf) My goal is to compare the total living
+area to the sale price. I will first show what the correlation is before
+any changes, then i will filter the data a bit to get a better insight
+to how living area and sale price correlate.
 
 ``` r
 cor(ames$`Sale Price`, ames$YearBuilt, use = "complete.obs")
