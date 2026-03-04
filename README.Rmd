@@ -23,3 +23,36 @@ Include your answers in this document (Rmd file). Make sure that it knits proper
 
 All submissions to the github repo will be automatically uploaded for grading once the due date is passed.
 Submit a link to your repository on Canvas (only one submission per team) to signal to the instructors that you are done with your submission.
+
+## Step 1: Inspecting the Dataset
+
+```{r inspect-data}
+# Load the dataset
+data(ames)
+
+# View first rows
+head(ames)
+
+# Dimensions
+dim(ames)
+
+# Variable names and types
+str(ames)
+
+# Summary statistics
+summary(ames)
+```
+
+## Step 2: Main Variable
+
+## Step 3: Exploring Main Variable
+
+## Step 4: Related Variables
+
+-- Ryan: YearBuilt
+
+-- Nick: TotalLivingArea (sf)
+
+-- Amelia: Lot (sf)
+
+-- Huu: Acres
