@@ -48,6 +48,28 @@ summary(ames)
 The variable of primary interest is **`Sale Price`**, the USD sale price of each residential property. It would be expected that if the sale price of a house increases or decreases, most other numerical variables in the dataset would change. For example, if one house's sale price is higher than another's, you might expect it to have a higher total living area in square feet.
 
 ## Step 3: Exploring Main Variable
+```{r}
+ames$`Sale Price`
+```
+```{r}
+summary(ames$`Sale Price`)
+```
+```{r}
+range(ames$`Sale Price`, na.rm = TRUE)
+```
+```{r}
+ggplot(ames, aes(x = `Sale Price`)) +
+  geom_histogram(bins = 30, fill = "blue") +
+  labs(title = "sale price distribution",
+       x = "Sale Price",
+       y = "Count")
+```
+```{r}
+sum(ames$`Sale Price` == 0)
+```
+The main thing that is odd is the sale prices that have 0, as well as some pretty extreme outliers. When we try to figure out what correlates with the sale price, there won't be any high corelations because of the outliers being so insanely high. It's also noteworthy that there are over 2000 rows with a sale price of 0. The mean of the data is an entire digit higher than the median. But the graph is very clearly unimodal and right skewed, and the presence of outliers is pretty obvious.
+
+
 
 ## Step 4: Related Variables
 
