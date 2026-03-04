@@ -1,4 +1,7 @@
 ---
+title: "Lab 2: Exploring Residential Sales in Ames"
+author: "Team 6: Ryan Horsey, Dominic DiRe, Amelia Humphrey, Huu Phuoc Tran"
+date: "`r Sys.Date()`"
 output: github_document
 ---
 
@@ -6,7 +9,10 @@ output: github_document
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(classdata)
+library(ggplot2)
+library(dplyr)
 ```
 
 # Lab report #1
