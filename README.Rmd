@@ -41,6 +41,7 @@ str(ames)
 
 # Summary statistics
 summary(ames)
+
 ```
 
 ## Step 2: Main Variable
@@ -53,6 +54,36 @@ summary(ames)
 
 -- Nick: TotalLivingArea (sf)
 
--- Amelia: Lot (sf)
+-- Amelia: Bedrooms
+<br> Range: 0 to 10.
+Most residences have 3 bedrooms.
+There is little to no correlation between the amount of bedrooms and the Sale Price with the value of -0.063. 
+This variable does not describe the oddities found in section 3 as the correlation between sale price and bedrooms is low.
+
+
+```{r}
+View(ames)
+
+min(ames$Bedrooms, na.rm = TRUE) #min
+max(ames$Bedrooms, na.rm = TRUE) #max
+ggplot(ames, aes(x = Bedrooms))+ #plot
+  geom_histogram()
+
+#scatterplot between the sales price and bedrooms with no filtering
+ggplot(ames, aes(x= Bedrooms , y = `Sale Price`)) + 
+  geom_point() + 
+  ggtitle("Bedrooms vs Sale Price")
+
+#note that the plot is not super helpful in seeing a correlation as there are many outliers
+
+ames |> 
+  filter(!is.na(Bedrooms), !is.na(`Sale Price`), `Sale Price` < 100000 ) |> 
+  ggplot(aes(x = Bedrooms, y = `Sale Price`)) +
+  geom_point() + 
+  ggtitle("Cleaned Bedrooms vs Sale Price")
+
+cor(ames$Bedrooms, ames$`Sale Price`, use = "complete.obs")
+
+```
 
 -- Huu: Acres

@@ -131,6 +131,58 @@ summary(ames)
 
 – Nick: TotalLivingArea (sf)
 
-– Amelia: Lot (sf)
+– Amelia: Bedrooms <br> Range: 0 to 10. Most residences have 3 bedrooms.
+There is little to no correlation between the amount of bedrooms and the
+Sale Price with the value of -0.063. This variable does not describe the
+oddities found in section 3 as the correlation between sale price and
+bedrooms is low.
+
+``` r
+View(ames)
+
+min(ames$Bedrooms, na.rm = TRUE) #min
+```
+
+    ## [1] 0
+
+``` r
+max(ames$Bedrooms, na.rm = TRUE) #max
+```
+
+    ## [1] 10
+
+``` r
+ggplot(ames, aes(x = Bedrooms))+ #plot
+  geom_histogram()
+```
+
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+``` r
+#scatterplot between the sales price and bedrooms with no filtering
+ggplot(ames, aes(x= Bedrooms , y = `Sale Price`)) + 
+  geom_point() + 
+  ggtitle("Bedrooms vs Sale Price")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
+
+``` r
+#note that the plot is not super helpful in seeing a correlation as there are many outliers
+
+ames |> 
+  filter(!is.na(Bedrooms), !is.na(`Sale Price`), `Sale Price` < 100000 ) |> 
+  ggplot(aes(x = Bedrooms, y = `Sale Price`)) +
+  geom_point() + 
+  ggtitle("Cleaned Bedrooms vs Sale Price")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-1-3.png)<!-- -->
+
+``` r
+cor(ames$Bedrooms, ames$`Sale Price`, use = "complete.obs")
+```
+
+    ## [1] -0.0631706
 
 – Huu: Acres
