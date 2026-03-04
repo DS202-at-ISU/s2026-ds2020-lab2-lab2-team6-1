@@ -206,7 +206,7 @@ ggplot(ames, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
        y = "Sale Price")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- --> Time to
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- --> <br>Time to
 filter the data:
 
 ``` r
@@ -227,7 +227,7 @@ nrow(ames_clean)
 
     ## [1] 3919
 
-So quite a few rows were filtered out Now this is the sale price
+<br>So quite a few rows were filtered out Now this is the sale price
 histogram post-filtering
 
 ``` r
@@ -236,8 +236,8 @@ ggplot(ames_clean, aes(x = `Sale Price`)) +
   theme_minimal()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> And this is
-the scatterplot post filtering
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> <br>And this
+is the scatterplot post filtering
 
 ``` r
 ggplot(ames_clean, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
@@ -255,6 +255,64 @@ cor(ames_clean$`Sale Price`, ames_clean$`TotalLivingArea (sf)`, use = "complete.
 
 The correlation tripled
 
-– Amelia: Lot (sf)
+– Amelia: Bedrooms<br> The goal is to see if there is a correlation
+between the number of bedrooms and the sales price. <br> Range: 0 to 10.
+Most residences have 3 bedrooms. There is little to no correlation
+between the amount of bedrooms and the Sale Price with the value of
+-0.063. This variable does not describe the oddities found in section 3
+as the correlation between sale price and bedrooms is low.
+
+``` r
+summary(ames$Bedrooms)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+    ##   0.000   3.000   3.000   3.299   4.000  10.000     447
+
+``` r
+min(ames$Bedrooms, na.rm = TRUE) #min
+```
+
+    ## [1] 0
+
+``` r
+max(ames$Bedrooms, na.rm = TRUE) #max
+```
+
+    ## [1] 10
+
+``` r
+ggplot(ames, aes(x = Bedrooms))+ #plot
+  geom_histogram()
+```
+
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+#scatterplot between the sales price and bedrooms with no filtering
+ggplot(ames, aes(x= Bedrooms , y = `Sale Price`)) + 
+  geom_point() + 
+  ggtitle("Bedrooms vs Sale Price")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
+
+``` r
+#note that the plot is not super helpful in seeing a correlation as there are many outliers
+
+ames |> 
+  filter(!is.na(Bedrooms), !is.na(`Sale Price`), `Sale Price` < 100000 ) |> 
+  ggplot(aes(x = Bedrooms, y = `Sale Price`)) +
+  geom_point() + 
+  ggtitle("Cleaned Bedrooms vs Sale Price")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-15-3.png)<!-- -->
+
+``` r
+cor(ames$Bedrooms, ames$`Sale Price`, use = "complete.obs")
+```
+
+    ## [1] -0.0631706
 
 – Huu: Acres

@@ -41,6 +41,7 @@ str(ames)
 
 # Summary statistics
 summary(ames)
+
 ```
 
 ## Step 2: Main Variable -- Sale Price
@@ -93,7 +94,7 @@ ggplot(ames, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
        x = "Total Living Area (sq ft)",
        y = "Sale Price")
 ```
-Time to filter the data:
+<br>Time to filter the data:
 ```{r}
 ames_clean <- ames %>%
   filter(`Sale Price` > 0 ,`Sale Price` < 1000000,
@@ -105,14 +106,14 @@ nrow(ames)
 ```{r}
 nrow(ames_clean)
 ```
-So quite a few rows were filtered out
+<br>So quite a few rows were filtered out
 Now this is the sale price histogram post-filtering
 ```{r}
 ggplot(ames_clean, aes(x = `Sale Price`)) +
   geom_histogram(bins = 30, fill = "blue", color = 'white') +
   theme_minimal()
 ```
-And this is the scatterplot post filtering
+<br>And this is the scatterplot post filtering
 ```{r}
 ggplot(ames_clean, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
   geom_point(alpha = 0.5) +
@@ -125,7 +126,37 @@ cor(ames_clean$`Sale Price`, ames_clean$`TotalLivingArea (sf)`, use = "complete.
 ```
 The correlation tripled
 
--- Amelia: Lot (sf)
+-- Amelia: Bedrooms<br> The goal is to see if there is a correlation between the number of bedrooms and the sales price.
+<br> Range: 0 to 10.
+Most residences have 3 bedrooms.
+There is little to no correlation between the amount of bedrooms and the Sale Price with the value of -0.063. 
+This variable does not describe the oddities found in section 3 as the correlation between sale price and bedrooms is low.
+
+
+```{r}
+summary(ames$Bedrooms)
+
+min(ames$Bedrooms, na.rm = TRUE) #min
+max(ames$Bedrooms, na.rm = TRUE) #max
+ggplot(ames, aes(x = Bedrooms))+ #plot
+  geom_histogram()
+
+#scatterplot between the sales price and bedrooms with no filtering
+ggplot(ames, aes(x= Bedrooms , y = `Sale Price`)) + 
+  geom_point() + 
+  ggtitle("Bedrooms vs Sale Price")
+
+#note that the plot is not super helpful in seeing a correlation as there are many outliers
+
+ames |> 
+  filter(!is.na(Bedrooms), !is.na(`Sale Price`), `Sale Price` < 100000 ) |> 
+  ggplot(aes(x = Bedrooms, y = `Sale Price`)) +
+  geom_point() + 
+  ggtitle("Cleaned Bedrooms vs Sale Price")
+
+cor(ames$Bedrooms, ames$`Sale Price`, use = "complete.obs")
+
+```
 
 -- Huu: Acres
 ```{r}
