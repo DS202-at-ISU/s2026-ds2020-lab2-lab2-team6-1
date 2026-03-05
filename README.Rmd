@@ -41,6 +41,7 @@ str(ames)
 
 # Summary statistics
 summary(ames)
+
 ```
 
 ## Step 2: Main Variable -- Sale Price
@@ -48,10 +49,31 @@ summary(ames)
 The variable of primary interest is **`Sale Price`**, the USD sale price of each residential property. It would be expected that if the sale price of a house increases or decreases, most other numerical variables in the dataset would change. For example, if one house's sale price is higher than another's, you might expect it to have a higher total living area in square feet.
 
 ## Step 3: Exploring Main Variable
+```{r}
+summary(ames$`Sale Price`)
+```
+```{r}
+range(ames$`Sale Price`, na.rm = TRUE)
+```
+```{r}
+ggplot(ames, aes(x = `Sale Price`)) +
+  geom_histogram(bins = 30, fill = "blue") +
+  labs(title = "sale price distribution",
+       x = "Sale Price",
+       y = "Count")
+```
+```{r}
+sum(ames$`Sale Price` == 0)
+```
+The main thing that is odd is the sale prices that have 0, as well as some pretty extreme outliers. When we try to figure out what correlates with the sale price, there won't be any high corelations because of the outliers being so insanely high. It's also noteworthy that there are over 2000 rows with a sale price of 0. The mean of the data is an entire digit higher than the median. But the graph is very clearly unimodal and right skewed, and the presence of outliers is pretty obvious.
+
+
 
 ## Step 4: Related Variables
 
 -- Ryan: YearBuilt
+
+Comparing `YearBuilt` to `Sale Price`, my expectation is that newer homes will command higher prices. This is because they typically feature modern styles and are usually bigger.
 
 ```{r year-built-vs-price, fig.width=8, fig.height=5}
 # Sale Price vs Year Built (excluding $0 sales)
@@ -67,6 +89,10 @@ ames %>%
     y = "Sale Price (USD)"
   ) +
   theme_minimal()
+```
+
+``` {r}
+cor(ames$`Sale Price`, ames$YearBuilt, use = "complete.obs")
 ```
 
 Because the outliers make this variable relationship difficult to analyze, I will remove the outliers (homes worth over $10,000,000) and analyze the new graph.
@@ -87,11 +113,129 @@ ames %>%
   theme_minimal()
 ```
 
+``` {r}
+ames_clean <- ames %>%
+  filter(`Sale Price` > 0, `Sale Price` < 10000000, !is.na(YearBuilt))
 
-**Analysis:**
+cor(ames_clean$`Sale Price`, ames_clean$YearBuilt, use = "complete.obs")
+```
 
--- Nick: TotalLivingArea (sf)
+After removing the $10M+ outliers, the correlation increases noticeably, confirming they were 
+skewing the relationship. The cleaned plot shows a relatively moderate positive trend. Newer homes generally sell for more. Although, the curve flattens approaching 2020 from 2000, suggesting year built alone is not a strong standalone predictor of sale price. The correlation is weakened by the many houses being built and sold for what seems to be under $100,000. We can also infer this might be related to the housing crisis in 2008.
 
--- Amelia: Lot (sf)
+-- Dominic: TotalLivingArea (sf)
+My goal is to compare the total living area to the sale price. I will first show what the correlation is before any changes, then i will filter the data a bit to get a better insight to how living area and sale price correlate.
+
+```{r}
+cor(ames$`Sale Price`, ames$YearBuilt, use = "complete.obs")
+
+```
+```{r}
+summary(ames$`TotalLivingArea (sf)`)
+```
+```{r}
+range(ames$`TotalLivingArea (sf)`, na.rm = TRUE)
+```
+```{r}
+ggplot(ames, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
+  geom_point(alpha = 0.5, color = "red") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Sale Price vs Total Living Area",
+       x = "Total Living Area (sq ft)",
+       y = "Sale Price")
+```
+<br>Time to filter the data:
+```{r}
+ames_clean <- ames %>%
+  filter(`Sale Price` > 0 ,`Sale Price` < 1000000,
+         `TotalLivingArea (sf)` > 0)
+```
+```{r}
+nrow(ames)
+```
+```{r}
+nrow(ames_clean)
+```
+<br>So quite a few rows were filtered out
+Now this is the sale price histogram post-filtering
+```{r}
+ggplot(ames_clean, aes(x = `Sale Price`)) +
+  geom_histogram(bins = 30, fill = "blue", color = 'white') +
+  theme_minimal()
+```
+<br>And this is the scatterplot post filtering
+```{r}
+ggplot(ames_clean, aes(x = `TotalLivingArea (sf)`, y = `Sale Price`)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black")
+```
+
+```{r}
+cor(ames_clean$`Sale Price`, ames_clean$`TotalLivingArea (sf)`, use = "complete.obs")
+
+```
+The correlation tripled
+
+-- Amelia: Bedrooms<br> The goal is to see if there is a correlation between the number of bedrooms and the sales price.
+<br> Range: 0 to 10.
+Most residences have 3 bedrooms.
+There is little to no correlation between the amount of bedrooms and the Sale Price with the value of -0.063. 
+This variable does not describe the oddities found in section 3 as the correlation between sale price and bedrooms is low.
+
+
+```{r}
+summary(ames$Bedrooms)
+
+min(ames$Bedrooms, na.rm = TRUE) #min
+max(ames$Bedrooms, na.rm = TRUE) #max
+ggplot(ames, aes(x = Bedrooms))+ #plot
+  geom_histogram()
+
+#scatterplot between the sales price and bedrooms with no filtering
+ggplot(ames, aes(x= Bedrooms , y = `Sale Price`)) + 
+  geom_point() + 
+  ggtitle("Bedrooms vs Sale Price")
+
+#note that the plot is not super helpful in seeing a correlation as there are many outliers
+
+ames |> 
+  filter(!is.na(Bedrooms), !is.na(`Sale Price`), `Sale Price` < 100000 ) |> 
+  ggplot(aes(x = Bedrooms, y = `Sale Price`)) +
+  geom_point() + 
+  ggtitle("Cleaned Bedrooms vs Sale Price")
+
+cor(ames$Bedrooms, ames$`Sale Price`, use = "complete.obs")
+
+```
 
 -- Huu: Acres
+```{r}
+  #Range
+  range(ames$Acres, na.rm = TRUE)
+  sum(is.na(ames$Acres))
+  #The range of the Acres variable is between 0 and 12.012 and there is 89 missing values
+```
+```{r}
+  # Distribution plot
+    ggplot(ames, aes(x = Acres)) +
+      geom_histogram(bins = 30) +
+      labs(title = "Distribution of Acres", x = "Acres", y = "Count")
+      
+    # The distribution of the Acres was strongly right-skewed, most homes have very small lot sizes, and there is a long right tail with the small number of very large lots.
+```
+```{r}
+  ggplot(ames, aes(x = Acres, y = `Sale Price`)) +
+  geom_point(alpha = 0.3) +
+  scale_y_continuous(trans = "log1p") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Sale Price vs Acres",
+    x = "Acres",
+    y = "Sale Price (log1p)"
+  )
+  
+  #The relationship between Acres and Sale Price is not clean.
+  # Most observations cluster at very small acreage (near 0), and within this cluster there is no strong linear pattern. 
+  # A large number of records have Sale Price = 0, forming a horizontal band at 0; these values heavily influence the fitted line and make the overall linear trend appear negative.
+  # There are also a few large-acre and very high-price outliers that add noise and make a simple linear relationship unreliable.
+```
