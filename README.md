@@ -136,6 +136,48 @@ area in square feet.
 
 – Ryan: YearBuilt
 
+``` r
+# Sale Price vs Year Built (excluding $0 sales)
+ames %>%
+  filter(`Sale Price` > 0, !is.na(YearBuilt)) %>%
+  ggplot(aes(x = YearBuilt, y = `Sale Price`)) +
+  geom_point(alpha = 0.3, color = "coral") +
+  geom_smooth(method = "loess", color = "darkred") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  labs(
+    title = "Sale Price vs. Year Built",
+    x = "Year Built",
+    y = "Sale Price (USD)"
+  ) +
+  theme_minimal()
+```
+
+![](README_files/figure-gfm/year-built-vs-price-1.png)<!-- -->
+
+Because the outliers make this variable relationship difficult to
+analyze, I will remove the outliers (homes worth over \$10,000,000) and
+analyze the new graph.
+
+``` r
+# Sale Price vs Year Built (excluding $0 sales)
+ames %>%
+  filter(`Sale Price` > 0, `Sale Price` < 10000000, !is.na(YearBuilt)) %>%
+  ggplot(aes(x = YearBuilt, y = `Sale Price`)) +
+  geom_point(alpha = 0.3, color = "coral") +
+  geom_smooth(method = "loess", color = "darkred") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  labs(
+    title = "Sale Price vs. Year Built",
+    x = "Year Built",
+    y = "Sale Price (USD)"
+  ) +
+  theme_minimal()
+```
+
+![](README_files/figure-gfm/year-built-vs-price2-1.png)<!-- -->
+
+**Analysis:**
+
 – Nick: TotalLivingArea (sf)
 
 – Amelia: Lot (sf)
